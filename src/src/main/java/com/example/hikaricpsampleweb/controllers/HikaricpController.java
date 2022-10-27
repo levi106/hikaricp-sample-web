@@ -12,8 +12,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
-import com.zaxxer.hikari.metrics.prometheus.PrometheusMetricsTrackerFactory;
+import com.zaxxer.hikari.metrics.micrometer.MicrometerMetricsTrackerFactory;
+// import com.zaxxer.hikari.metrics.prometheus.PrometheusMetricsTrackerFactory;
 
+import io.micrometer.core.instrument.MeterRegistry;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -21,6 +23,9 @@ import lombok.extern.slf4j.Slf4j;
 @RequestMapping("hikaricp")
 public class HikaricpController {
     private HikariDataSource ds = null;
+
+    @Autowired
+    private MeterRegistry meterRegistry;
 
     @Value("${spring.datasource.url}")
     private String jdbcUrl;
@@ -35,8 +40,8 @@ public class HikaricpController {
 
         final HikariConfig config = new HikariConfig();
         config.setJdbcUrl(jdbcUrl);
-        config.setRegisterMbeans(true);
-        //config.setMetricsTrackerFactory(new PrometheusMetricsTrackerFactory());
+        //config.setRegisterMbeans(true);
+        config.setMetricsTrackerFactory(new MicrometerMetricsTrackerFactory(meterRegistry));
         ds = new HikariDataSource(config);
 
         return "Ok";
