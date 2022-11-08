@@ -1,7 +1,7 @@
 FROM gradle:jdk17 as builder
 
 WORKDIR /home/gradle/src
-RUN curl -OL https://github.com/microsoft/ApplicationInsights-Java/releases/download/3.4.3/applicationinsights-agent-3.3.0.jar
+RUN curl -OL https://github.com/microsoft/ApplicationInsights-Java/releases/download/3.4.3/applicationinsights-agent-3.4.3.jar
 COPY --chown=gradle:gradle . /home/gradle/src/
 RUN gradle build
 
