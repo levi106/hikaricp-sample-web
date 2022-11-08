@@ -40,7 +40,8 @@ public class HikaricpController {
 
         final HikariConfig config = new HikariConfig();
         config.setJdbcUrl(jdbcUrl);
-        //config.setRegisterMbeans(true);
+        config.setConnectionTimeout(1000);
+        config.setMaximumPoolSize(100);
         config.setMetricsTrackerFactory(new MicrometerMetricsTrackerFactory(meterRegistry));
         ds = new HikariDataSource(config);
 
@@ -57,7 +58,7 @@ public class HikaricpController {
 
         try (final Connection conn = ds.getConnection();
              final PreparedStatement statement = conn.prepareStatement("SELECT 1")) {
-            log.info("Query");
+            log.info("Query: " + conn.toString());
             statement.executeQuery();
             log.info("Done");
             conn.close();
