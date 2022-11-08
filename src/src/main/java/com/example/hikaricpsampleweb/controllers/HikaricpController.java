@@ -45,6 +45,7 @@ public class HikaricpController {
         config.setJdbcUrl(jdbcUrl);
         config.setConnectionTimeout(1000);
         config.setMaximumPoolSize(100);
+        config.setMaxLifetime(0);
         config.setMetricsTrackerFactory(new MicrometerMetricsTrackerFactory(meterRegistry));
         ds = new HikariDataSource(config);
 
