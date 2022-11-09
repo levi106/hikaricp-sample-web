@@ -43,9 +43,22 @@ public class HikaricpController {
 
         final HikariConfig config = new HikariConfig();
         config.setJdbcUrl(jdbcUrl);
-        config.setConnectionTimeout(1000);
-        config.setMaximumPoolSize(100);
-        config.setMaxLifetime(0);
+        final String connectionTimeoutMs = System.getenv("CONNECTION_TIMEOUT_MS");
+        if (connectionTimeoutMs != null && !connectionTimeoutMs.isEmpty()) {
+            config.setConnectionTimeout(Integer.parseInt(connectionTimeoutMs));
+        }
+        final String maxPoolSize = System.getenv("MAX_POOL_SIZE");
+        if (maxPoolSize != null && !maxPoolSize.isEmpty()) {
+            config.setMaximumPoolSize(Integer.parseInt(maxPoolSize));
+        }
+        final String maxLifetimeMs = System.getenv("MAX_LIFETIME_MS");
+        if (maxLifetimeMs != null && !maxLifetimeMs.isEmpty()) {
+            config.setMaxLifetime(Integer.parseInt(maxLifetimeMs));
+        }
+        final String validationTimeoutMs = System.getenv("VALIDATION_TIMEOUT_MS");
+        if (validationTimeoutMs != null && !validationTimeoutMs.isEmpty()) {
+            config.setValidationTimeout(Integer.parseInt(validationTimeoutMs));
+        }
         config.setMetricsTrackerFactory(new MicrometerMetricsTrackerFactory(meterRegistry));
         ds = new HikariDataSource(config);
 
